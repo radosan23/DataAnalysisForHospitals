@@ -32,8 +32,10 @@ class DataAnalyzer:
                                                  (self.df.diagnosis == 'dislocation')].shape[0] /
                                      self.df.loc[self.df.hospital == 'sports'].shape[0])
         ages = self.df.groupby('hospital').agg({'age': 'median'})
-        self.stats['age_diff'] = ages.loc['general'] - ages.loc['sports']
-        print(self.df.pivot_table(index='hospital', columns='blood_test', values='age', aggfunc='count'))
+        self.stats['age_diff'] = abs(ages.loc['general'].values[0] - ages.loc['sports'].values[0])
+        blood_t = self.df.pivot_table(index='hospital', columns='blood_test', values='age', aggfunc='count')
+        self.stats['bloodiest'] = blood_t.t.idxmax()
+        self.stats['n_blood_t'] = blood_t.t.agg('max').astype('int')
 
 
 def main():
@@ -46,10 +48,9 @@ def main():
     print(f"The answer to the 1st question is {analyzer.stats['hospital']}\n"
           f"The answer to the 2st question is {analyzer.stats['stomach']:.3f}\n"
           f"The answer to the 3st question is {analyzer.stats['dislocation']:.3f}\n"
-          f"The answer to the 4st question is {analyzer.stats['age_diff']}\n"
-          f"The answer to the 5st question is {analyzer.stats['hospital']}, "
-          f"{analyzer.stats['hospital']} blood tests")
-    print(analyzer.df.blood_test.value_counts())
+          f"The answer to the 4st question is {analyzer.stats['age_diff']:.0f}\n"
+          f"The answer to the 5st question is {analyzer.stats['bloodiest']}, "
+          f"{analyzer.stats['n_blood_t']} blood tests")
 
 
 if __name__ == '__main__':
