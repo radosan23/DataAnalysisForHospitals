@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class DataAnalyzer:
@@ -37,20 +38,26 @@ class DataAnalyzer:
         self.stats['bloodiest'] = blood_t.t.idxmax()
         self.stats['n_blood_t'] = blood_t.t.agg('max').astype('int')
 
+    def visualize(self):
+        bins = [0, 15, 35, 55, 70, 80]
+        self.df.plot(y=['age'], kind='hist', bins=bins)
+        plt.show()
+        self.df['diagnosis'].value_counts().plot(kind='pie')
+        plt.show()
+        plt.violinplot(self.df['height'])
+        plt.show()
+
 
 def main():
     pd.set_option('display.max_column', 8)
 
     analyzer = DataAnalyzer('test/data/general.csv', 'test/data/prenatal.csv', 'test/data/sports.csv')
     analyzer.preprocess()
-    analyzer.statistics()
+    analyzer.visualize()
 
-    print(f"The answer to the 1st question is {analyzer.stats['hospital']}\n"
-          f"The answer to the 2st question is {analyzer.stats['stomach']:.3f}\n"
-          f"The answer to the 3st question is {analyzer.stats['dislocation']:.3f}\n"
-          f"The answer to the 4st question is {analyzer.stats['age_diff']:.0f}\n"
-          f"The answer to the 5st question is {analyzer.stats['bloodiest']}, "
-          f"{analyzer.stats['n_blood_t']} blood tests")
+    print(f"The answer to the 1st question: 15-35\n"
+          f"The answer to the 2nd question: pregnancy\n"
+          f"The answer to the 3rd question: ")
 
 
 if __name__ == '__main__':
