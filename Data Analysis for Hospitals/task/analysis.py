@@ -44,7 +44,10 @@ class DataAnalyzer:
         plt.show()
         self.df['diagnosis'].value_counts().plot(kind='pie')
         plt.show()
-        plt.violinplot(self.df['height'])
+        plt.violinplot([self.df['height'], self.df.loc[self.df.hospital == 'general', 'height'],
+                        self.df.loc[self.df.hospital == 'prenatal', 'height'],
+                        self.df.loc[self.df.hospital == 'sports', 'height']])
+        plt.title('patients age')
         plt.show()
 
 
@@ -57,7 +60,7 @@ def main():
 
     print(f"The answer to the 1st question: 15-35\n"
           f"The answer to the 2nd question: pregnancy\n"
-          f"The answer to the 3rd question: ")
+          f"The answer to the 3rd question: because sports hospital measure height in feet, others in meters")
 
 
 if __name__ == '__main__':
